@@ -27,14 +27,14 @@ module.exports = {
   ** Global CSS
   */
   css: [
-  
+    'vant/lib/vant-css/index.css'
   ],
 
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
-    {src: '~plugins/vant', ssr: true}
+    { src: '~plugins/vant', ssr: true }
   ],
 
   /*
@@ -48,9 +48,13 @@ module.exports = {
   ** Axios module configuration
   */
   axios: {
-    // See https://github.com/nuxt-community/axios-module#options
+    prefix: '/api/',
+    proxy: true // Can be also an object with default options
   },
 
+  proxy: {
+    '/api/': { target: 'http://beijing.vchew.com' }
+  },
   /*
   ** Build configuration
   */
@@ -58,7 +62,10 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
-    babel: { plugins: [ ["component", { "libraryName": "vant", "styleLibraryName": "vant-css", "style": true }] ] },
+    extractCSS: {
+      allChunks: true
+    },
+    babel: { plugins: [["component", { "libraryName": "vant", "styleLibraryName": "vant-css", "style": true }]] },
     extend(config, ctx) {
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {

@@ -1,108 +1,49 @@
 <template>
   <div>
-    <van-checkbox-group class="card-goods" v-model="checkedGoods">
-      <van-checkbox
-        class="card-goods__item"
-        v-for="item in goods"
-        :key="item.id"
-        :name="item.id"
-      >
-        <van-card
-          :title="item.title"
-          :desc="item.desc"
-          :num="item.num"
-          :price="formatPrice(item.price)"
-          :thumb="item.thumb"
-        />
-      </van-checkbox>
-    </van-checkbox-group>
-    <van-submit-bar
-      :price="totalPrice"
-      :disabled="!checkedGoods.length"
-      :button-text="submitBarText"
-      @submit="onSubmit"
-    />
+    <van-nav-bar
+  :title="title"
+  left-text="返回"
+  right-text="全国"
+  left-arrow
+   @click-right="onClickRight"
+>
+   <van-icon name="location" slot="right" />
+  </van-nav-bar><van-notice-bar
+  text="足协杯战线连续第2年上演广州德比战，上赛季半决赛上恒大以两回合5-3的总比分淘汰富力。"
+  left-icon="https://img.yzcdn.cn/1.png"
+/>
+ <van-tabs >
+  <van-tab title="标签 1">内容 1</van-tab>
+  <van-tab title="标签 2">内容 2</van-tab>
+  <van-tab title="标签 3">内容 3</van-tab>
+  <van-tab title="标签 4">内容 4</van-tab>
+</van-tabs>
+
+   
+
+ 
   </div>
 </template>
 
 <script>
-import { Checkbox, Card, SubmitBar, Toast } from 'vant';
 export default {
-  components: { 
-    [Card.name]: Card,
-    [Checkbox.name]: Checkbox,
-    [SubmitBar.name]: SubmitBar,
-
+  async asyncData({ app }) {
+    let { data } = await app.$axios.get("v1/SiteApi/getAllSite")
+     return {title:data.data.A[0].name};
   },
-  data() {
-    return {
-      checkedGoods: ['1', '2', '3'],
-      goods: [{
-        id: '1',
-        title: '进口香蕉',
-        desc: '约250g，2根',
-        price: 200,
-        num: 1,
-        thumb: 'https://img.yzcdn.cn/public_files/2017/10/24/2f9a36046449dafb8608e99990b3c205.jpeg'
-      }, {
-        id: '2',
-        title: '陕西蜜梨',
-        desc: '约600g',
-        price: 690,
-        num: 1,
-        thumb: 'https://img.yzcdn.cn/public_files/2017/10/24/f6aabd6ac5521195e01e8e89ee9fc63f.jpeg'
-      }, {
-        id: '3',
-        title: '美国伽力果',
-        desc: '约680g/3个',
-        price: 2680,
-        num: 1,
-        thumb: 'https://img.yzcdn.cn/public_files/2017/10/24/320454216bbe9e25c7651e1fa51b31fd.jpeg'
-      }]
-    };
-  },
-  computed: {
-    submitBarText() {
-      const count = this.checkedGoods.length;
-      return '结算' + (count ? `(${count})` : '');
-    },
-    totalPrice() {
-      return this.goods.reduce((total, item) => total + (this.checkedGoods.indexOf(item.id) !== -1 ? item.price : 0), 0);
-    }
-  },
-  methods: {
-    formatPrice(price) {
-      return (price / 100).toFixed(2);
-    },
-    onSubmit() {
-      Toast('点击结算');
+  methods:{
+    onClickRight(){
+      this.$dialog.alert({
+  title: '标题',
+  message: '弹窗内容'
+}).then(() => {
+  this.$toast('我是提示文案，建议不超过十五字~');
+});
+      
     }
   }
 };
 </script>
 
 <style lang="less">
-.card-goods {
-  padding: 10px 0;
-  background-color: #fff;
-  &__item {
-    position: relative;
-    background-color: #fafafa;
-    .van-checkbox__label {
-      width: 100%;
-      padding: 0 10px 0 15px;
-      box-sizing: border-box;
-    }
-    .van-checkbox__icon {
-      top: 50%;
-      left: 10px;
-      z-index: 1;
-      position: absolute;
-      margin-top: -10px;
-    }
-    .van-card__price {
-      color: #f44;
-    }
-  }
-}
 </style>
